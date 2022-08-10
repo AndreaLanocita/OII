@@ -2,51 +2,38 @@
 
 using namespace std;
 
-int sol[1000000];
-
-int ans(int n, int b, vector<int> A) {
-	// caso base
-	if(b==0) return 0;
-
-	if(b<0 || n==-1) return -2;
-
-	// ho la sol
-	if(sol[n] != -1) return sol[n];
-
-	// sol
-	int c, d;
-	c = ans(n, b-A[n], A);	// prendo lo stesso panino
-	d = ans(n-1, b, A); 	// non prendo panino
-
-	if(c==-2 && d==-2) {
-		sol[n] = -2;
-		return sol[n];
-	}
-
-	if(c==-2) {
-		sol[n] = d;
-		return sol[n];
-	}
-
-	if(d==-2) {
-		sol[n] = c+1;
-		return sol[n];
-	}
-
-	sol[n] = min(d, c+1);
-
-	return sol[n];
-}
-
 int sushi(int N, int B, vector<int> A) {
-	for(int i=0; i<N; i++) {
-		sol[i] = -1;
+	int sol[B+5] = { };
+	/* per contare le ripetizioni, vedo quale punto del vettore sol, inizializzato
+	come se fossi arrivato a 0, raggiungo aggiungendo ciascun piatto dall'ultimo punto in cui
+	sono arrivato */
+	deque<int> caselle;	// aggiungo all'inizio, tolgo dalla fine --> FIFO
+	sol[0] = 1;
+	caselle.push_back(0);
+	int res = 0, size_tmp, aggiunti, controllati = 1, controllati_tmp = 0;
+
+	while(sol[B] != 1 && !caselle.empty()) {
+		res++;
+		for(int i=0; i<N; i++) {
+			aggiunti = 0;
+			size_tmp = caselle.size();
+			for(int j=0; j<size_tmp; j++) {
+				if(caselle[j+aggiunti]+A[i]<=B && sol[caselle[j+aggiunti]+A[i]] == 0) {
+					sol[caselle[j+aggiunti]+A[i]] = 1;
+					caselle.push_front(caselle[j+aggiunti]+A[i]);
+					aggiunti++;
+					controllati_tmp++;
+				}
+			}
+		}
+
+		for(int j=0; j<controllati; j++) caselle.pop_back();
+		controllati = controllati_tmp;
+		controllati_tmp = 0;
 	}
-
-	int temp = ans(N-1, B, A);
-	if(temp == -2) temp = -1;
-
-	return temp;
+	
+	if(sol[B] == 1) return res;
+	return -1;
 }
 
 int main() {

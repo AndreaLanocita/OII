@@ -18,17 +18,16 @@ void mincammino(int N, int M, vector<int> X, vector<int> Y, vector<int> P, vecto
     distanze.push({0, 0});
     D[0] = 0;
     for(int i = 1; i<N; i++) {
-        distanze.push({INT_MAX, i});
         D[i] = INT_MAX;
     }
     
     // dijikstra
     for(int i=0; i<N; i++) {
         // cerco nodo più vicino che non ho già visitato
-        while(true && !distanze.empty()) {
+        while(!distanze.empty()) {
             n = distanze.top().second;
-            // è up-to-date o è una useless entry?
-            if(D[n] == distanze.top().first && v[n] != 1 && D[n] != INT_MAX) break;  
+            // è up-to-date o è una useless entry? l'ho già visitato?
+            if(D[n] == distanze.top().first && v[n] != 1) break;  
             distanze.pop();  // se no lo tolgo e continuo a cercare
         }
         if(distanze.empty()) break;  // non ho niente da controllare
