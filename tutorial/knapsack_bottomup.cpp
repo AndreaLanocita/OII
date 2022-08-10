@@ -27,3 +27,25 @@ int main() {
         }
     }
 }
+
+int risparmio_memoria() {
+    // dato che per ogni iterazione accedo solo alla parte k-1 del vettore,
+    // mi salvo solo quella, calcolo il nuovo vettore in un temporaneo e poi
+    // lo sostituistico
+    int ans_tmp[C];
+    int ans_v[C];
+    
+    // caso base
+    for(int c=0; c<=C; c++) {
+        if(w[0] > c) ans[c] = 0;
+        else ans[c] = V[0];
+    }
+    
+    for(int k=1; k<N; k++) {
+        for(int c=0; c<=C; c++) {
+            ans_tmp[c] = ans_v[c];
+            if(w[k] <= c) ans_tmp[c] = max(ans_tmp[c], ans_v[c-w[k]] + v[k]);
+        }
+        ans_v = ans_tmp;
+    }
+}
