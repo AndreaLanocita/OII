@@ -3,6 +3,8 @@
 
 using namespace std;
 
+#define ll long long int
+
 static long long MAX = LLONG_MAX;
 
 struct Node{
@@ -25,6 +27,28 @@ vector<Node> nodes;
 void is_lazy(int u, int l, int r) {
 	if(nodes[u].lazy_add == 0 && nodes[u].lazy_set == LLONG_MIN) return;
 
+	if(nodes[u].lazy_set != LLONG_MIN && nodes[u].lazy_add != 0) {
+        // aumento direttamente il nodo e propago ai figli nel lazy
+		nodes[u].mi = nodes[u].lazy_set;	
+		// se cambio l'interno range di numeri in n --> la somma dei numeri sarà il numero di nodi incluso nel range * n
+		nodes[u].val = nodes[u].lazy_set*(r-l);
+		// aumento direttamente il nodo e propago ai figli nel lazy
+		nodes[u].mi += nodes[u].lazy_add;
+		// se aggiungo n a tutte le foglie in un range, il singolo nodo aumenta di n*range
+		nodes[u].val += nodes[u].lazy_add*(r-l);
+		
+		if(2*u+1 < nodes.size()) {
+			nodes[2*u].lazy_set = nodes[u].lazy_set;
+			nodes[2*u+1].lazy_set = nodes[u].lazy_set;
+			nodes[2*u].lazy_add = nodes[u].lazy_add;
+			nodes[2*u+1].lazy_add = nodes[u].lazy_add;
+		}
+
+        nodes[u].lazy_add = 0;
+        nodes[u].lazy_set = LLONG_MIN;
+        return ;
+    }
+
 	if(nodes[u].lazy_add != 0) {
 		// aumento direttamente il nodo e propago ai figli nel lazy
 		nodes[u].mi += nodes[u].lazy_add;
@@ -35,32 +59,11 @@ void is_lazy(int u, int l, int r) {
 		if(2*u+1 < nodes.size()) {
 			// non si devono stackare lazy_updates
 			// SE AGGIUNGO QUALCOSA DOPO UN SET DEVOTENERE CONTO DEL SET
-			if(nodes[2*u].lazy_set != LLONG_MIN) {
-				nodes[2*u].lazy_set += nodes[u].lazy_add + nodes[2*u].lazy_add;
-				nodes[2*u].lazy_add = 0;
-			}
-			else {
-				nodes[2*u].lazy_add += nodes[u].lazy_add;
-			}
-
-			if(nodes[2*u+1].lazy_set != LLONG_MIN) {
-				nodes[2*u+1].lazy_set += nodes[u].lazy_add + nodes[2*u+1].lazy_add;
-				nodes[2*u+1].lazy_add = 0;
-			}
-			else {
-				nodes[2*u+1].lazy_add += nodes[u].lazy_add;
-			}
+			nodes[2*u].lazy_add += nodes[u].lazy_add;
+			nodes[2*u+1].lazy_add += nodes[u].lazy_add;
 		}
 
 		nodes[u].lazy_add = 0;
-
-		// NON SERVE in lazy prop
-		// while(u > 1) {
-		// 	u /= 2;
-		// 	nodes[u].join(nodes[2*u], nodes[2*u+1]);
-		// }
-
-		// se ha lazy_add != 0, non può avere lazy_set != 0 perché lo avrei risolto in add()
 		return;
 	}
 
@@ -79,12 +82,6 @@ void is_lazy(int u, int l, int r) {
 	}
 
 	nodes[u].lazy_set = LLONG_MIN;
-
-	// while(u > 1) {
-	// 	u /= 2;
-	// 	nodes[u].join(nodes[2*u], nodes[2*u+1]);
-	// }
-
 	return;
 }
 
@@ -121,7 +118,7 @@ void init(vector<long long> a) {
 long long get_sum(int u, int l, int r, int x, int y) {
 	// tengo conto del nodo, quindi mi serve che sia up-to-date
 	is_lazy(u, l, r);
-
+	
 	// controllo se è completamente escluso
 	if(l >= y || r <= x) return 0;
 
@@ -139,7 +136,7 @@ long long get_sum(int l, int r) {
 void add(int u, int l, int r, int x, int y, long long n) {
 	// tengo conto del nodo, quindi mi serve che sia up-to-date
 	is_lazy(u, l, r);
-
+	
 	// no overlap, nothing to do
 	if(l >= y || r <= x) return;
 
@@ -152,30 +149,9 @@ void add(int u, int l, int r, int x, int y, long long n) {
 		nodes[u].val += n*(r-l);
 
 		if(2*u+1 < nodes.size()) {
-			// non si devono stackare lazy_updates
-			// SE AGGIUNGO QUALCOSA DOPO UN SET DEVOTENERE CONTO DEL SET
-			if(nodes[2*u].lazy_set != LLONG_MIN) {
-				nodes[2*u].lazy_set += nodes[u].lazy_add + nodes[2*u].lazy_add;
-				nodes[2*u].lazy_add = 0;
-			}
-			else {
-				nodes[2*u].lazy_add += n;
-			}
-
-			if(nodes[2*u+1].lazy_set != LLONG_MIN) {
-				nodes[2*u+1].lazy_set += nodes[u].lazy_add + nodes[2*u+1].lazy_add;
-				nodes[2*u+1].lazy_add = 0;
-			}
-			else {
-				nodes[2*u+1].lazy_add += n;
-			}
+			nodes[2*u].lazy_add += n;
+			nodes[2*u+1].lazy_add += n;
 		}
-
-		// NON SERVE PERCHE DOVUNQUE C'E UN PARZIALE OVERLAP FACCIO GIA IL JOIN
-		// while(u > 1) {
-		// 	u /= 2;
-		// 	nodes[u].join(nodes[2*u], nodes[2*u+1]);
-		// }
 
 		return;
 	}
@@ -192,7 +168,7 @@ void add(int l, int r, long long x) {
 	add(1, 0, real_size, l, r, x);
 }
 
-void set_range(int u, int l, int r, int x, int y, int n) {
+void set_range(int u, int l, int r, int x, int y, ll n) {
 	// tengo conto del nodo, quindi mi serve che sia up-to-date
 	is_lazy(u, l, r);
 
@@ -216,13 +192,6 @@ void set_range(int u, int l, int r, int x, int y, int n) {
 			nodes[2*u].lazy_set = n;
 			nodes[2*u+1].lazy_set = n;
 		}
-		
-		// NON SERVE PERCHE DOVUNQUE C'E UN PARZIALE OVERLAP FACCIO GIA IL JOIN
-		// while(u > 1) {
-		// 	u /= 2;
-		// 	nodes[u].join(nodes[2*u], nodes[2*u+1]);
-		// }
-
 		return;
 	}
 
@@ -241,7 +210,7 @@ void set_range(int l, int r, long long x) {
 long long get_min(int u, int l, int r, int x, int y) {	// y escluso
 	// tengo conto del nodo, quindi mi serve che sia up-to-date
 	is_lazy(u, l, r);
-
+	
 	// controllo se i limiti sono completamente esclusi
 	if(l >= y || r <= x) return MAX;
 
@@ -260,10 +229,10 @@ long long get_min(int l, int r) {
 }
 
 int lower_bound(int u, int l, int r, int x, int y, long long bound) {
-	// tengo conto del nodo, quindi mi serve che sia up-to-date
+    // tengo conto del nodo, quindi mi serve che sia up-to-date
 	is_lazy(u, l, r);
 	
-    // controllo se i limiti sono completamente esclusi
+	// controllo se i limiti sono completamente esclusi
     if(l >= y || r <= x) return -1;
 
 	// sono almeno parzialmente inclusi, controllo se il valore del nodo corrente è minore di bound

@@ -27,7 +27,7 @@ void mincammino(int N, int M, vector<int> X, vector<int> Y, vector<int> P, vecto
         while(!distanze.empty()) {
             n = distanze.top().second;
             // è up-to-date o è una useless entry? l'ho già visitato?
-            if(D[n] == distanze.top().first && v[n] != 1) break;  
+            if(v[n] != 1) break;  
             distanze.pop();  // se no lo tolgo e continuo a cercare
         }
         if(distanze.empty()) break;  // non ho niente da controllare

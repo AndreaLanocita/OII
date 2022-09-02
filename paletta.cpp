@@ -3,84 +3,80 @@
 
 using namespace std;
 
-struct Node {
-    int depth;
-    int mi;
-    long long int pos;
+#define vi vector<int>
+#define ll long long int
 
-    Node() : mi(INT_MAX), pos(0), depth(0) {};
+vi fenwick;
 
-    void join(const Node &l, const Node &r) {
-        // se quello a sx è minore non devo riordinare
-        if(l.mi <= r.mi) {  
-            mi = l.mi;
-            pos = l.pos + r.pos;
-        } else {
-            // se quello a dx maggiore devo spostarlo più volte in base alla altezza dell'albero, che parte da 0 per i figli
-            mi = r.mi;
-            pos = l.pos + r.pos + (l.depth + 1);
-        }
-        depth = l.depth + 1;
-    }
-
-};
-
-int n, real_size;
-int* dataa;
-vector<Node> nodes;
-
-void build_pari(int u, int l, int r) {
-    if(r-l == 1) {
-        // sono in una foglia
-        if(l<n) {
-            // sono una foglia che esiste
-            nodes[u].mi = dataa[l];
-        }
-    }
-    else {
-        build_pari(2*u, l, (r+l)/2);
-        build_pari(2*u+2, (l+r)/2+1, r);
-        nodes[u].join(nodes[2*u], nodes[2*u+2]);
+void add(int index, int val) {
+    while(index<fenwick.size()) {
+        fenwick[index] += val;
+        index += index & (-index);
     }
 }
 
-void build_dispari(int u, int l, int r) {
-    if(r-l == 1) {
-        // sono in una foglia
-        if(l<n) {
-            // sono una foglia che esiste
-            nodes[u].mi = dataa[l];
-        }
+int summ=0;
+ll sum(int index) {
+    summ=0;
+    // prefix sum, all of the elements smaller than index
+    while(index > 0) {
+        summ += fenwick[index];
+        // go backwards lsb(index)
+        index -= index & (-index);
     }
-    else {
-        build_dispari(2*u-1, l, (l+r)/2);
-        build_dispari(2*u+1, (l+r)/2+1, r);
-        nodes[u].join(nodes[2*u-1], nodes[2*u+1]);
-    }
-}
-
-void init() {
-    real_size = 1;
-    while(real_size < n) {
-        real_size *= 2;
-    }
-
-    nodes.assign(2 * real_size, Node());
-
-    build_pari(2, 0, real_size-1); // albero pari
-    build_dispari(3, 1, real_size); // albero dispari
+    return summ;
 }
 
 long long paletta_sort(int N, int V[]) {
-    dataa = V;
-    n = N;
-    for (int i = 0; i < n; ++i){
+    int pari[N/2+2];
+    int dispari[N/2+2];
+    int pn = 0, dn = 0;
+
+    // check if it exists
+    for (int i = 0; i < N; ++i){
 		if(i%2 != V[i]%2)
 			return -1;	
-    }
-    init();
 
-    return nodes[2].pos + nodes[3].pos;
+        // divido gli array in pari e dispari
+        if(i%2) {
+            pari[pn] = V[i];
+            pn += 1;
+        }
+        else {
+            dispari[dn] = V[i];
+            dn += 1;
+        }
+    }
+    
+    // fenwick
+    fenwick.assign(N+1, 0);
+    ll res = 0;
+    // faccio tutto al contrario per comodità
+    for(int i=dn-1; i>=0; i--) {
+        // look for the sum of all the elements smaller than 
+        // V[i]
+        res += sum(dispari[i]+1);
+
+        // update the tree --> there's one more element with that value
+        // +1, fuck the 0
+        add(dispari[i]+1, 1);
+    }
+
+    // fenwick
+    fenwick.assign(N+1, 0);
+    // faccio tutto al contrario per comodità
+    for(int i=pn-1; i>=0; i--) {
+        // look for the sum of all the elements smaller than 
+        // V[i]
+        res += sum(pari[i]+1);
+        
+        // update the tree --> there's one more element with that value
+        // +1, fuck the 0
+        add(pari[i]+1, 1);
+    }
+
+    return res;
+
 }
 
 static FILE *fr, *fw;
