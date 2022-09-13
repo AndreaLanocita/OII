@@ -17,8 +17,8 @@ using namespace std;
 
 #define MAXN 250000
 
-const int LOG_MAX = 18;
-int up[MAXN+1][LOG_MAX];
+int LOG_MAX;
+int up[MAXN+5][40];
 int max_depth = 0;
 int nodo = 0;
 
@@ -39,6 +39,7 @@ void dfs(int n, int precedente, vi adj[], int depth[], vi& candidati) {
 		for(int i=1; i<=LOG_MAX; i++) up[vicino][i] = up[up[vicino][i-1]][i-1];
 		dfs(vicino, n, adj, depth, candidati);
 	}
+	return ;
 }
 
 // k-th ancestor
@@ -67,7 +68,7 @@ int lca(int a, int b, int depth[]) {
     if(a==b) return a;
 
     for(int i=LOG_MAX; i>=0; i--) {
-        if(up[a][i] == up[b][i]) break;
+        if(up[a][i] == up[b][i]) continue;
         a = up[a][i];
         b = up[b][i];
     }
@@ -83,10 +84,11 @@ int distanza(int a, int b, int depth[]) {
 }
 
 int build(int N, std::vector<int> A, std::vector<int> B) {
-	vi adj[N];
-	int depth[N];
+	vi adj[N+1];
+	int depth[N+1];
 	vi candidati;
-	candidati.reserve(N);
+	candidati.reserve(N+5);
+	LOG_MAX = ceil(log2(N))+2;
 	
 	for(int i=0; i<N-1; i++) {
 		adj[A[i]].pb(B[i]);
@@ -97,18 +99,18 @@ int build(int N, std::vector<int> A, std::vector<int> B) {
 	depth[0] = 0;
 	dfs(0, -1, adj, depth, candidati);
 
-	ll res = 0; int nodo2 = 0; int tmp = 0;
-	for(int candidato: candidati) {
-		if(candidato==nodo) continue;
-		int distanzaa = distanza(nodo, candidato, depth);
+	ll res = 0; int nodo2 = 0; ll tmp = 0;
+	for(int i=0; i<N; i++) {
+		if(i==nodo) continue;
+		int distanzaa = distanza(nodo, i, depth);
 		if(distanzaa > tmp) {
 			tmp = distanzaa;
-			nodo2 = candidato;
+			nodo2 = i;
 		} 
 	}
 	res += tmp;
 	tmp = 0;
-	for(int candidato: candidati) {
+	for(int candidato=0; candidato<N; candidato++) {
 		if(candidato==nodo || candidato==nodo2) continue;
 		int distanzaa = distanza(nodo, candidato, depth)+distanza(nodo2, candidato, depth);
 		if(distanzaa > tmp) {
@@ -117,23 +119,4 @@ int build(int N, std::vector<int> A, std::vector<int> B) {
 	}
 	res += tmp;
 	return res;
-}
-
-int build(int N, std::vector<int> A, std::vector<int> B);
-
-int main() {
-	// se vuoi leggere da file decommenta queste due linee
-	// assert(freopen("input.txt", "r", stdin));
-	// assert(freopen("output.txt", "w", stdout));
-
-	int n;
-	assert(std::cin >> n);
-
-	std::vector<int> a(n - 1), b(n - 1);
-	for (int i = 0; i < n - 1; ++i) {
-		assert(std::cin >> a[i] >> b[i]);
-	}
-
-	int ans = build(n, move(a), move(b));
-	std::cout << ans << '\n';
 }
