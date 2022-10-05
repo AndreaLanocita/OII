@@ -22,9 +22,8 @@ int up[MAXN+5][40];
 int max_depth = 0;
 int nodo = 0;
 
-void dfs(int n, int precedente, vi adj[], int depth[], vi& candidati) {
+void dfs(int n, int precedente, vi adj[], int depth[]) {
 	if(n!=0) depth[n] = depth[precedente]+1;
-	if(adj[n].size()==1 && n!=0) candidati.pb(n);
 	if(depth[n] > max_depth && adj[n].size()==1) {
 		max_depth = depth[n];
 		nodo = n;
@@ -37,7 +36,7 @@ void dfs(int n, int precedente, vi adj[], int depth[], vi& candidati) {
 		// completo tabella
 		up[vicino][0] = n;
 		for(int i=1; i<=LOG_MAX; i++) up[vicino][i] = up[up[vicino][i-1]][i-1];
-		dfs(vicino, n, adj, depth, candidati);
+		dfs(vicino, n, adj, depth);
 	}
 	return ;
 }
@@ -86,8 +85,6 @@ int distanza(int a, int b, int depth[]) {
 int build(int N, std::vector<int> A, std::vector<int> B) {
 	vi adj[N+1];
 	int depth[N+1];
-	vi candidati;
-	candidati.reserve(N+5);
 	LOG_MAX = ceil(log2(N))+2;
 	
 	for(int i=0; i<N-1; i++) {
@@ -95,9 +92,8 @@ int build(int N, std::vector<int> A, std::vector<int> B) {
 		adj[B[i]].pb(A[i]);
 	}
 
-	candidati.pb(0);
 	depth[0] = 0;
-	dfs(0, -1, adj, depth, candidati);
+	dfs(0, -1, adj, depth);
 
 	ll res = 0; int nodo2 = 0; ll tmp = 0;
 	for(int i=0; i<N; i++) {

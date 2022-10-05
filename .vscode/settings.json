@@ -5,6 +5,12 @@
         "chrono": "cpp",
         "random": "cpp",
         "limits": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "vector": "cpp",
+        "future": "cpp",
+        "span": "cpp",
+        "type_traits": "cpp",
+        "deque": "cpp",
+        "string": "cpp"
     }
 }

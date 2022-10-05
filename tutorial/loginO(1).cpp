@@ -1,4 +1,1 @@
-int logg(long long x)
-{
-    return 64 - __builtin_clzll(x) - 1;
-}
+int logg(long long x) {return 64 - __builtin_clzll(x) - 1;}
