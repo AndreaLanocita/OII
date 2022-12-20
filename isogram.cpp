@@ -1,35 +1,41 @@
+// NOTE: it is recommended to use this even if you don't understand the following code.
+
 #include <bits/stdc++.h>
 
 using namespace std;
 
+// input data
+int N;
+string S;
+
 int main() {
-    int N, ripetizioni, not_isogram, first, last, a;
-    string input;
+//  uncomment the following lines if you want to read/write from files
+    ifstream cin("input.txt");
+//  ofstream cout("output.txt");
 
     cin >> N;
     cin.ignore();
-    not_isogram = 0;
 
-    for(int i=0; i<N; i++) {
-        getline(cin, input);
+    unordered_map<int, int> map;
+    int flag, counter=0;
+    for (int i=0; i<N; i++) {
+        flag = 0;
+        getline(cin, S);
 
-        input[0] = tolower(input[0]);
-
-        for(int j=0; j<input.size(); j++) {
-            if(input[j] >= 65 && input[j] < 97) input[j] = tolower(input[j]);
+        // insert your code here
+        for(int j=0; j<S.length(); j++) {
+            if(S[j] >= 65 && S[j] <= 90) S[j] += 32;
+            if(!(S[j] >= 97 && S[j] <= 122)) continue;
+            map[S[j]]++;
+            if(map[S[j]] > 2) {
+                flag = 1;
+                break;
+            }
         }
-
-        for(int j=0; j<input.size(); j++) {
-            first = input.find_first_of(input[j], j+1);
-            last = input.find_last_of(input[j]);
-            a = input.find_first_of(input[j], j);
-            if((last == first || last == a) || (input[j] < 65) || (input[j] > 122) || (input[j] > 90 && input[j] < 97)) continue;
-
-            not_isogram += 1;
-            break;
-        }
+        map.erase(map.begin(), map.end());
+        if(flag!=1) counter++;
     }
 
-    ripetizioni = N-not_isogram;
-    cout << ripetizioni;
+    cout << counter << endl; // print the result
+    return 0;
 }
