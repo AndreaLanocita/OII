@@ -11,6 +11,12 @@
         "span": "cpp",
         "type_traits": "cpp",
         "deque": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "iostream": "cpp",
+        "barrier": "cpp",
+        "latch": "cpp",
+        "semaphore": "cpp",
+        "iosfwd": "cpp",
+        "ostream": "cpp"
     }
 }

@@ -33,10 +33,12 @@ int main() {
         for(int c=1; c<=K; c++) {
             long long temp;
             temp = sol[i-1][c]; // non prendo questo panino
-            if(c-peso[i] > 0) sol[i][c] = sol[i-1][c-peso[i]] + peso[i]; // prendo panino
-            else sol[i][c] = 0 + peso[i];
-
-            if(temp >= c) {
+            // potendo prendo solo questo panino, è di sicuro meglio che
+            // prendere anche il precedente
+            if(peso[i] >= c) sol[i][c] = 0 + peso[i];
+            else sol[i][c] = sol[i-1][c-peso[i]] + peso[i]; // prendo entrambi
+            
+            if(temp >= c) { // caso in cui non prendo il panino è valido
                 if(temp <= sol[i][c]) sol[i][c] = temp;
             }
         }

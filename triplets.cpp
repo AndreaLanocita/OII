@@ -17,102 +17,80 @@ using namespace std;
 
 #define MAXN 250000
 
-int LOG_MAX;
-int up[MAXN+5][40];
-int max_depth = 0;
-int nodo = 0;
+int n1 = 0, distanza1 = 0;
+int n2 = 0;
 
-void dfs(int n, int precedente, vi adj[], int depth[]) {
-	if(n!=0) depth[n] = depth[precedente]+1;
-	if(depth[n] > max_depth && adj[n].size()==1) {
-		max_depth = depth[n];
-		nodo = n;
+void dfs(int n, int pre, vi adj[], int distanza) {
+	if(distanza > distanza1) {
+		n1 = n; 
+		distanza1 = distanza;
 	}
 
 	for(int vicino: adj[n]) {
-		// escludo il vicino
-		if(vicino==precedente) continue;
-
-		// completo tabella
-		up[vicino][0] = n;
-		for(int i=1; i<=LOG_MAX; i++) up[vicino][i] = up[up[vicino][i-1]][i-1];
-		dfs(vicino, n, adj, depth);
+		if(vicino==pre) continue;
+		dfs(vicino, n, adj, distanza+1);
 	}
 	return ;
 }
 
-// k-th ancestor
-int kth_a(int a, int k) {
-    for(int i=0; i<=LOG_MAX; i++) {
-        if(k & (1 << i)) {
-            // sposto l'1 vs sx di quella potenza di due
-            // & returns true se almeno uno dei bit controllati
-            // è 1 in entrambi
-            a = up[a][i];
+void dfs1(int n, int pre, vi adj[], int distanza, int distanze1[]) {
+	distanze1[n] = distanza;
+	if(distanza > distanza1) {
+		n2 = n; 
+		distanza1 = distanza;
+	}
 
-            // dato che l'array è inizializzato a 0, tutti gli
-            // ancestor a cui non si arriva da un nodo portano al root
-        }   
-    }
-    return a;
+	for(int vicino: adj[n]) {
+		if(vicino==pre) continue;
+		dfs1(vicino, n, adj, distanza+1, distanze1);
+	}
+	return ;
 }
 
-int lca(int a, int b, int depth[]) {
-    // a è più in basso
-    if(depth[a] < depth[b]) swap(a, b);
-    int k = depth[a] - depth[b];
-    a = kth_a(a, k);
+void dfs2(int n, int pre, vi adj[], int distanza, int distanze2[]) {
+	distanze2[n] = distanza;
 
-    // stesso nodo
-    if(a==b) return a;
-
-    for(int i=LOG_MAX; i>=0; i--) {
-        if(up[a][i] == up[b][i]) continue;
-        a = up[a][i];
-        b = up[b][i];
-    }
-
-    // risalgo dell'ultimo
-    return up[a][0];
-}
-
-int distanza(int a, int b, int depth[]) {
-	int n_lca = lca(a, b, depth);
-	if(n_lca == a || n_lca == b) return max(depth[a], depth[b]) - min(depth[a], depth[b]);
-	return depth[a] + depth[b] - 2*depth[n_lca];
+	for(int vicino: adj[n]) {
+		if(vicino==pre) continue;
+		dfs2(vicino, n, adj, distanza+1, distanze2);
+	}
+	return ;
 }
 
 int build(int N, std::vector<int> A, std::vector<int> B) {
-	vi adj[N+1];
-	int depth[N+1];
-	LOG_MAX = ceil(log2(N))+2;
+	vi adj[N];
+	int distanze1[N], distanze2[N];
 	
 	for(int i=0; i<N-1; i++) {
 		adj[A[i]].pb(B[i]);
 		adj[B[i]].pb(A[i]);
 	}
 
-	depth[0] = 0;
-	dfs(0, -1, adj, depth);
-
-	ll res = 0; int nodo2 = 0; ll tmp = 0;
+	dfs(0, -1, adj, 0);
+	dfs1(n1, -1, adj, 0, distanze1);
+	dfs2(n2, -1, adj, 0, distanze2);
+	int res = 0;
 	for(int i=0; i<N; i++) {
-		if(i==nodo) continue;
-		int distanzaa = distanza(nodo, i, depth);
-		if(distanzaa > tmp) {
-			tmp = distanzaa;
-			nodo2 = i;
-		} 
+		if(i==n1 || i==n1) continue;
+		if(distanze1[i]+distanze2[i] > res) res = distanze1[i]+distanze2[i];
 	}
-	res += tmp;
-	tmp = 0;
-	for(int candidato=0; candidato<N; candidato++) {
-		if(candidato==nodo || candidato==nodo2) continue;
-		int distanzaa = distanza(nodo, candidato, depth)+distanza(nodo2, candidato, depth);
-		if(distanzaa > tmp) {
-			tmp = distanzaa;
-		} 
+
+	return res+distanza1;
+}
+
+int main() {
+	// se vuoi leggere da file decommenta queste due linee
+	assert(freopen("input.txt", "r", stdin));
+	// assert(freopen("output.txt", "w", stdout));
+
+	int n;
+	assert(std::cin >> n);
+
+	std::vector<int> a(n - 1), b(n - 1);
+	for (int i = 0; i < n - 1; ++i) {
+		assert(std::cin >> a[i] >> b[i]);
 	}
-	res += tmp;
-	return res;
+
+	int ans = build(n, move(a), move(b));
+	std::cout << ans << '\n';
 }
