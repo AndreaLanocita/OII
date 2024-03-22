@@ -2,7 +2,7 @@
 
 using namespace std;
 
-map<int, vector<int>> cestini;
+map<int, vector<char>> cestini;
 
 void inizia(int N, int M) {
     for(int i=0; i<N; i++) {
@@ -26,8 +26,8 @@ int controlla(int a, int i) {
 
 int main() {
     // Uncomment the following lines if you want to read/write from files
-    // ifstream cin("input.txt");
-    // ofstream cout("output.txt");
+    ifstream cin("cestini_input_1.txt");
+    ofstream cout("cestini_output_1.txt");
 
     ios::sync_with_stdio(false);
 
