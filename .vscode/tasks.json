@@ -6,6 +6,9 @@
             "command": "D:\\MSYS2\\mingw64\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                "-O2",
+                "-Wall",
+                "-Wshadow",
                 "-g",
                 "${file}",
                 "-o",
