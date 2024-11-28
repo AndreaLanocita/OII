@@ -23,4 +23,6 @@ int main() {
     // We add w[i] 0s at the start of the bitset (reach the positin in pos+w[i])
     // and update the bitset to have 1s wherever at least of the two bisets has a 1 (OR)
     for(int i=0; i<N; i++) reached |= (reached << weights[i]);
+
+    cout << reached[W];
 }

@@ -4,6 +4,7 @@
 using namespace std;
 
 #define vi vector<int>
+#define pi pair<int, int>
 #define MAXN 1000000
 
 int first[MAXN]; 
@@ -53,18 +54,18 @@ void init() {
 	build(1, 0, real_size);
 }
 
-int get_min(int u, int l, int r, int x, int y) {
+pi get_min(int u, int l, int r, int x, int y) {
 	// completamente escluso
-	if(l>=y || r<=x) return INT_MAX;
+	if(l>=y || r<=x) return {-1, INT_MAX};
 
 	// completamente inclusi
-	if(l>=x && r<=y) return nodes[u].n;
+	if(l>=x && r<=y) return {nodes[u].n, nodes[u].mi};
 
 	// a metà, ricorro
-	return min(
-		get_min(2*u, l, (l+r)/2, x, y),
-		get_min(2*u+1, (l+r)/2, r, x, y)	
-	);
+	pi a = get_min(2*u, l, (l+r)/2, x, y);
+	pi b = get_min(2*u+1, (l+r)/2, r, x, y);
+	if(a.second < b.second) return a;
+	return b;
 }
 
 int dfs(int n, int pre, vi adj[], int h=0) {
@@ -81,9 +82,13 @@ int dfs(int n, int pre, vi adj[], int h=0) {
 
 int euler_tour(int N, vi adj[]) {
     dfs(0, -1, adj);
+	// segtree
+	init();
 
-    // make a segtree
-    
+    // get_min returns the lca, its essentially
+	// a RMQ on the height
+	int a, b;	// nodes
+	get_min(1, 0, real_size, first[a], first[b]);    
 }
 
 int main() {

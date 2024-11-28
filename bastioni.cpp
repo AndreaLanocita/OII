@@ -2,14 +2,14 @@
 using namespace std;
 
 int arrampicate(int N, string S){
-    
-    
+    int flag=0;
     int res=0;
-    for(int i=0; i<N+1; ) {
+    for(int i=0; i<N; ) {
         int c = S[i]; 
         if(c=='=') {i++; continue;}
-        // i++;
-        //if(c=='?') c == 
+        if(flag==1) res++;
+        flag--;
+        if(c=='?') {flag=2; i++; continue;}
         res++;
         while((c == S[i] || S[i]=='=') && c!='#' && i<N+1) i++;
         i++;

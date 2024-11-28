@@ -43,7 +43,7 @@ int dfsUndirected(int nodo, unordered_map<int, int> adj[]) {
         adj[next].erase(nodo);
         adj[nodo].erase(next);
 
-        dfs(next, adj);  
+        dfsUndirected(next, adj);  
     }
 
     // siamo bloccati, aggiungiamo il nodo alla soluzione e torniamo indietro
@@ -56,7 +56,7 @@ int dfsDirected(int nodo, vector<int> adj[], vector<int> &n_unvisited) {
     // dfs fino a quando nonn rimaniamo bloccati
     while(n_unvisited[nodo] != -1) {    // l'ho reso 0 based dato ceh deve essere anche l'index di adj[N]
         n_unvisited[nodo] -= 1;
-        dfs(adj[nodo][n_unvisited[nodo]+1], adj, n_unvisited);  // ho riaggiunto l'1 che avevo rimosso
+        dfsDirected(adj[nodo][n_unvisited[nodo]+1], adj, n_unvisited);  // ho riaggiunto l'1 che avevo rimosso
     }
 
     // siamo bloccati, aggiungiamo il nodo alla soluzione e torniamo indietro
@@ -86,7 +86,7 @@ int main() {
     if(checkUndirected(n_unvisited, odd) == -1) return -1;
 
     // dfs
-    dfs(A, adj, n_unvisited);
+    // dfs(A, adj, n_unvisited);
 
     // cout con \n
     return 0;

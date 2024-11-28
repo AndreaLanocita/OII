@@ -1,0 +1,44 @@
+% chapters/Finale OII 2023 - Bergamo/artemoderna.tex
+%! TeX root = ../../../soluzioni.tex
+\section{Vetrate Colorate - artemoderna}
+
+\subsection*{Subtask 2}
+E' dimostrabile che esista sempre una soluzione al problema.
+Infatti:
+\begin{itemize}
+    \item Se l'ordine fosse decrescente, basterebbe ruotare insieme l'intera vetrata
+    \item Se l'ordine fosse crescente, si potrebbe ruotare singolarmente ciascun vetro
+\end{itemize}
+
+\lstinputlisting[language=c++]{chapters/Finale OII 2023 - Bergamo/artemoderna/subtask2.cpp}
+
+\subsection*{Subtask 3}
+L'idea generale prevede di dividere le vetrate in segmenti $[a, b]$ che, girati insieme, rendano la sottosequenza $[0, b]$ ordinata.
+\begin{prop}
+    Sia data una sequenza di 0 ed 1 da ordinare in ordine crescente dividendola in sottosequenze contigue e invertendo ciascuna.
+    Se tale ordinamento esiste, è ottenibile dividendo la sequenza dopo ciascuno 0 seguito da un 1.
+\end{prop}
+\begin{proof}
+    Assumiamo che esista l'ordinamento cercato e applichiamo l'algoritmo descritto. Sia $[0, a]$ una delle sottosequenze ottenute.
+    Allora:
+    \begin{itemize}
+        \item La sottosequenza è formata esclusivamente da zeri
+        \item La sottosequenza presenta $n$ 1, nelle posizioni $[0, n-1]$
+    \end{itemize}
+    In ogni altro caso infatti, la sottosequenza conterrebbe uno 0 seguito da un 1, che è impossibile per costruzione.
+    È facile vedere come in ciascuno dei due casi possibili, invertire la sottosequenza porti al suo ordinamento. \\
+    Ora è necessario dimostrare come, nel caso in cui con questo algoritmo non ottenessimo una sequenza ordinata, l'ordinamento cercato non esista.
+    Per assurdo, non dividiamo la sequenza dove è presente uno 0 con successivamente un 1, ma in una posizione successiva.
+    Dopo l'inversione della sottostringa, otterremmo per forza un 1 seguito da uno 0, quindi l'ordinamento non sarebbe corretto. 
+    Di conseguenza, l'unico algoritmo che può portare ad un risultato valido è quello descritto.
+\end{proof}
+
+Nel problema è specificato come tutta la vetrata vada ruotata, quindi bisogna ricordarsi di ruotare
+la sottosequenza rimasta una volta arrivati alla fine dell'array.
+
+\lstinputlisting[language=c++]{chapters/Finale OII 2023 - Bergamo/artemoderna/subtask3.cpp}
+
+\subsection*{Soluzione Ottimale}
+È possibile estendere la proposizione precedente al caso generale, per cui la divisione in sottosequenze
+va effettuata tra $(a, b)$, dovunque $a<b$. 
+\lstinputlisting[language=c++]{chapters/Finale OII 2023 - Bergamo/artemoderna/artemoderna.cpp}
