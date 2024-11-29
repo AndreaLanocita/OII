@@ -14,7 +14,10 @@ using namespace std;
 // input data
 short int N, M;
 vector<string> S;
+<<<<<<< HEAD
 
+=======
+>>>>>>> e36d179ced5161c8c6ee992a38584e6ba5e578cb
 vector<short int> link;
 vector<short int> sizee;
 
@@ -26,12 +29,18 @@ void init(short int N) {
         link[i] = i;
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e36d179ced5161c8c6ee992a38584e6ba5e578cb
 short int find(short int a) {
     while(link[a]!=a) a=link[a];
     return a;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e36d179ced5161c8c6ee992a38584e6ba5e578cb
 void unionn(short int a, short int b) {
     a = find(a);
     b= find(b);
@@ -45,6 +54,7 @@ void unionn(short int a, short int b) {
         sizee[a] += sizee[b];
     }
 }
+<<<<<<< HEAD
 
 int main() {
 //  uncomment the following lines if you want to read/write from files
@@ -66,6 +76,9 @@ int main() {
         }
     }
 
+=======
+int main() {
+>>>>>>> e36d179ced5161c8c6ee992a38584e6ba5e578cb
     sort(lista.begin(), lista.end());
     int prezzo = 0;
     init(N);
@@ -75,6 +88,10 @@ int main() {
         prezzo += (int) arco.first;
     }
 
+<<<<<<< HEAD
     cout << prezzo+M << "\n"; // print the result
+=======
+    cout << prezzo+M << "\n"; 
+>>>>>>> e36d179ced5161c8c6ee992a38584e6ba5e578cb
     return 0;
 }

@@ -1,0 +1,59 @@
+\documentclass[10pt, a4paper, oneside]{report} % oneside = solo fronte
+\usepackage[italian]{babel}
+\usepackage{csquotes}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[pass]{geometry}
+\usepackage{graphicx, enumitem, float, caption, subcaption}
+\usepackage[style=numeric, sorting=nty, backend=bibtex]{biblatex}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\author{Andrea Maria Lanocita}
+\date{\today}
+\title{Soluzioni Training Olinfo}
+
+\theoremstyle{plain}
+\newtheorem*{prop}{Proposizione}
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definizione}
+% messo in questo modo per far condividere il counter
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                          
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+\begin{document}
+    \maketitle
+
+    \chapter*{Sommario}
+	Questo documento vuole essere una raccolta di soluzioni ai problemi di training.olinfo.it, principalmente quelli dell'anno 2023-2024.
+    Insieme al codice sarà inclusa una breve spiegazione del ragionamento effettuato, eventualmente diviso per subtask.
+    Per segnalare errori o imprecisioni potete contattarmi a andrea.lanocita@gmail.com.
+	
+	\tableofcontents
+    \clearpage
+
+    \chapter{Finale OII - Bergamo 2023}
+    \include{chapters/Finale OII 2023 - Bergamo/artemoderna/artemoderna}
+
+\end{document}

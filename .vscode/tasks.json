@@ -6,6 +6,9 @@
             "command": "C:\\msys64\\ucrt64\\bin\\c++.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                //"-O2",
+                "-Wall",
+                "-Wshadow",
                 "-g",
                 "${file}",
                 "-o",

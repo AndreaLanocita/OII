@@ -1,54 +1,33 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-#define ll long long int
-
-set<ll> aperti;
-
-void inizia() {
-    return;
-}
-
-void apri(long long p) {
-    aperti.insert(p);
-    return;
-}
-
-void chiudi(long long p) {
-    aperti.erase(p);
-    return;
-}
-
-long long chiedi(long long p) {
-    if(aperti.empty() == true) return -1;
-
-    std::set<ll>::iterator itl, itu;
-    itu = aperti.lower_bound(p);
-    if(itu==aperti.begin()) return *itu;
-    itl = (--aperti.lower_bound(p));
+int arrampicate(int N, string S){
     
-    if(itu==aperti.end()) return *itl;
-    if(itl==aperti.end()) return *itu;
-
-    if(abs(*itu-p) > abs(*itl-p)) return *itl;
-    return *itu;
+    
+    int res=0;
+    for(int i=0; i<N+1; ) {
+        int c = S[i]; 
+        if(c=='=') {i++; continue;}
+        // i++;
+        //if(c=='?') c == 
+        res++;
+        while((c == S[i] || S[i]=='=') && c!='#' && i<N+1) i++;
+        i++;
+    }
+    if(res==0) return 1;
+    return res;
 }
 
 int main() {
-    int Q;
-    cin >> Q;
+    ios::sync_with_stdio(false);
+    cin.tie(0); // Remove these two lines in interactive problems.
 
-    inizia();
+    int N;
+    assert(cin >> N);
+    
+    string S;
+    assert(cin >> S);
 
-    for (int i = 0; i < Q; i++){
-        long long p;
-        char t;
-        cin >> t >> p;
-        if (t == 'a') apri(p);
-        else if (t == 'c') chiudi(p);
-        else cout << chiedi(p) << endl;
-    }
+    cout << arrampicate(N, move(S)) << '\n';
 
-    return 0;
 }

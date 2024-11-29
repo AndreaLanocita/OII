@@ -19,7 +19,7 @@
 	"Start": {
 		"prefix": ["#include", "start"],
 		"body": [
-			"#include <bits/stdc++.h> \n\nusing namespace std;\n\n#define vi vector<int>\n#define pi pair<int, int>\n#define vp vector<pi>\n#define ll long long int\n#define omap map<int, int>\n#define umap unordered_map<int, int>\n\nint main() {\n\t$0\n\treturn 0;\n}"
+			"#include <bits/stdc++.h> \n\nusing namespace std;\n\n#define vi vector<int>\n#define pi pair<int, int>\n#define vp vector<pi>\n#define ll long long int\n#define omap map<int, int>\n#define umap unordered_map<int, int>\n\nint main() {\n\tcin.tie(nullptr);ios::sync_with_stdio(false);\n\t//Remember to use \\n<<flush\n\t$0\n\treturn 0;\n}"
 		]
 	},
 
@@ -33,5 +33,24 @@
 	"Definitions": {
 		"prefix": ["definitions"],
 		"body": "#define pb push_back\n#define popb pop_back\n#define vi vector<int>\n#define pi pair<int, int>\n#define vp vector<pi>\n#define ll long long int\n#define pl pair<ll, ll>\n#define vl vector<ll>\n#define vpl vector<pl>\n#define omap map<int, int>\n#define umap unordered_map<int, int>\n#define pq priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>>"
+	},
+
+	"Fast IO": {
+		"prefix": ["Fast IO", "IO"],
+		"body": [
+			"#include <bits/stdc++.h>",
+			"using namespace std;",
+			"",
+			"const int BUF_SZ = 1 << 15;inline namespace Input {    char buf[BUF_SZ];    int pos;    int len;    char next_char() {        if (pos == len)        {            pos = 0;            len = (int)fread(buf, 1, 1, stdin);            if (!len)            {                return EOF;            }        }        return buf[pos++];    }    int read_int()    {        int x;        char ch;        int sgn = 1;        while (!isdigit(ch = next_char()))        {            if (ch == '-')            {                sgn *= -1;            }        }        x = ch - '0';        while (isdigit(ch = next_char()))        {            x = x * 10 + (ch - '0');        }        return x * sgn;    }} inline namespace Output{    char buf[BUF_SZ];    int pos;    void flush_out()    {        fwrite(buf, 1, pos, stdout);        pos = 0;    }    void write_char(char c)    {        if (pos == BUF_SZ)        {            flush_out();        }        buf[pos++] = c;    }    void write_int(int x) {        static char num_buf[100];        if (x < 0)        {            write_char('-');            x *= -1;        }        int len = 0;        for (; x >= 10; x /= 10){            num_buf[len++] = (char)('0' + (x % 10));        }        write_char((char)('0' + x));        while (len) {            write_char(num_buf[--len]);        }        write_char('\\n');    }    void init_output() { assert(atexit(flush_out) == 0); }} ",
+			"",
+			"int main() {",
+			"    init_output();",
+			"    int N = read_int();",
+			"    write_int(N);",
+			"    return 0;",
+			"}",
+		]
 	}
+
+	
 }

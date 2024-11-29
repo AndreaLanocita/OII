@@ -75,9 +75,3 @@ int init(int N, vi adj[]) {
     log_max = (int)ceil(log2(N));
     dfs(0, -1, adj); 
 }
-
-int main() {
-    
-
-    return 0;
-}

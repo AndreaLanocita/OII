@@ -22,7 +22,7 @@ int dp(int n, vector<pi> adj[], int precedente) {
     sol[n][0] = 0;
     sol[n][1] = 0;
 
-    // corner case
+    // corner 
     if(n != 1 && adj[n].size() == 2) {
         for(pi vicino: adj[n]) {
             if(vicino.second == precedente) continue;

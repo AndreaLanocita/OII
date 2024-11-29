@@ -3,9 +3,6 @@
 using namespace std;
 
 int main() {
-    // Prendo due numeri, se non sono uguali faccio la sottrazione tra il maggiore e
-    // e il minore fino a quando lo sono, quello è il MCD
-
     int A, B;
     cin >> A >> B;
 

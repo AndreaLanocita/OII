@@ -20,7 +20,23 @@ long long subarray_massimo(int l, int r);
 long long subarray_minimo(int l, int r);
 
 long long trova(int N) {
-    return subarray_massimo(0, 9999);
+    ll res =0, tmp_min, tmp;
+    int M = 80;
+    for(int i=0; i<125; i++) {
+        res += somma(M*i, M*i+79);
+        tmp_min = subarray_minimo(M*i, M*i+79);
+        
+        if(tmp_min<0) {
+            int g = M*i+79;
+            for(int h=0; h<80 && g-h>=0; h++) {
+                tmp = somma(g-h, g-h);
+                if(tmp>=0) break;
+                res -= tmp;
+            }
+            break;
+        }
+    }
+    return res;
 }
 
 

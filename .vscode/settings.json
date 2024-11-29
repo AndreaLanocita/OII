@@ -13,6 +13,7 @@
         "deque": "cpp",
         "string": "cpp",
         "iostream": "cpp",
+<<<<<<< HEAD
         "any": "cpp",
         "array": "cpp",
         "atomic": "cpp",
@@ -86,5 +87,12 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
+=======
+        "barrier": "cpp",
+        "latch": "cpp",
+        "semaphore": "cpp",
+        "iosfwd": "cpp",
+        "ostream": "cpp"
+>>>>>>> e36d179ced5161c8c6ee992a38584e6ba5e578cb
     }
 }
