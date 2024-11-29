@@ -2,37 +2,57 @@
 
 using namespace std;
 
-int N=3;
-int M=1000;
-long long massimo = 0;
-
-int succ(long long numero, int cifra) {
-    int cifre = ((int) log10(numero)) + 1;
-    return numero + cifra*pow(10, cifre);
-}
-
-bool isSafe(long long numero) {
-    int prev = 0;
-    int cifre = ((int) log10(numero)) + 1;
-
-    // controllo che n cifre non sia maggiore di N
-    if (cifre > N) return false;
-
-    // controllo che nessuna consecutiva cifra sia uguale
-    for(int i=cifre; i>0; i--) {
-        int temp = numero/pow(10, i-1);
-        if(i==1) {
-            if(numero == prev) return false;
-        }
-        else if(temp == prev) return false;
-        prev = numero/(pow(10, i-1));
-        numero = numero - pow(10, i-1) * prev;
-    }
-
-    return true;
-}
 
 int main() {
-    cout << isSafe(996);
+    random_device dev;
+    mt19937 rng(dev());
+    uniform_int_distribution<mt19937::result_type> dist3(1,3); 
+
+    int totali = 0, corretti = 0;
+    for(int i=0; i<100000000; i++) {
+        int porta_corretta = dist3(rng);
+        int porta_indovinata = dist3(rng);
+        int porta_rimossa = porta_indovinata;
+        while(porta_rimossa == porta_indovinata || porta_rimossa == porta_corretta) porta_rimossa = dist3(rng);
+        
+       int secondo_tentativo = porta_rimossa;
+       while(secondo_tentativo == porta_rimossa) secondo_tentativo = dist3(rng);
+
+        totali++;
+        if(porta_corretta == secondo_tentativo) corretti++;
+    }
+
+    printf("Casi totali: %d\n", totali);
+    printf("Casi corretti: %d\n", corretti);
+    printf("Probailità di trovare la porta corretta: %f%", ((float) corretti)/totali);
     return 0;
 }
+
+
+// int main() {
+//     random_device dev;
+//     mt19937 rng(dev());
+//     uniform_int_distribution<mt19937::result_type> dist3(1,3); 
+
+//     int totali = 0, corretti = 0;
+//     for(int i=0; i<1000000000; i++) {
+//         int porta_corretta = dist3(rng);
+//         int porta_indovinata = dist3(rng);
+//         int porta_rimossa = porta_indovinata;
+//         while(porta_rimossa == porta_indovinata || porta_rimossa == porta_corretta) porta_rimossa = dist3(rng);
+        
+//         for(int j=1; j<=3; j++) {
+//             if(j==porta_rimossa || j==porta_indovinata) continue;
+//             porta_indovinata = j;
+//             break;
+//         }
+
+//         totali++;
+//         if(porta_corretta == porta_indovinata) corretti++;
+//     }
+
+//     printf("Casi totali: %d\n", totali);
+//     printf("Casi corretti: %d\n", corretti);
+//     printf("Probailità di trovare la porta corretta: %f%", ((float) corretti)/totali);
+//     return 0;
+// }

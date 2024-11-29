@@ -3,31 +3,41 @@
 
 using namespace std;
 
+#define pb push_back
+#define popb pop_back
+#define vi vector<int>
+#define pi pair<int, int>
+#define vp vector<pi>
+#define ll long long int
+#define pl pair<ll, ll>
+#define vl vector<ll>
+#define vpl vector<pl>
+#define omap map<int, int>
+#define umap unordered_map<int, int>
+#define pq priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>>
+
 void mincammino(int N, int M, vector<int> X, vector<int> Y, vector<int> P, vector<int> &D) {
     int v[N] = { }; // per ogni nodo, visitato
     int n; // indice nodo che controllo in questo momento, parto da sorgente
 
     // precalcolo, metto tutto in una lista di adiacenza
-    vector<int> adj[N];  // posti pari = nodo arrivo, dispari = costo;
+    vector<pi> adj[N];  // posti pari = nodo arrivo, dispari = costo;
     for(int i=0; i<M; i++) {
-        adj[X[i]].push_back(Y[i]);
-        adj[X[i]].push_back(P[i]);
+        adj[X[i]].push_back({Y[i], P[i]});
+        adj[Y[i]].push_back({X[i], P[i]});
     }
 
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> distanze;    // distanza, nodo di arrivo
     distanze.push({0, 0});
     D[0] = 0;
-    for(int i = 1; i<N; i++) {
-        D[i] = INT_MAX;
-    }
+    for(int i = 1; i<N; i++) D[i] = INT_MAX;
     
     // dijikstra
     for(int i=0; i<N; i++) {
         // cerco nodo più vicino che non ho già visitato
         while(!distanze.empty()) {
             n = distanze.top().second;
-            // è up-to-date o è una useless entry? l'ho già visitato?
-            if(v[n] != 1) break;  
+            if(v[n] != 1) break;  // l'ho già visitato?
             distanze.pop();  // se no lo tolgo e continuo a cercare
         }
         if(distanze.empty()) break;  // non ho niente da controllare
@@ -36,10 +46,10 @@ void mincammino(int N, int M, vector<int> X, vector<int> Y, vector<int> P, vecto
         v[n] = 1;
 
         // controllo tutti nodi adiacenti, se posso migliorare distanza lo faccio
-        for(int j=0; j<adj[n].size(); j+=2) {  // controllo solo i numeri pari della lista, i dispari sono i pesi
-            if(v[adj[n][j]] != 1 && adj[n][j+1] + D[n] < D[adj[n][j]]) {
-                D[adj[n][j]] = adj[n][j+1] + D[n];
-                distanze.push({D[adj[n][j]], adj[n][j]});
+        for(pi vicino: adj[n]) {  // controllo solo i numeri pari della lista, i dispari sono i pesi
+            if(v[vicino.second] != 1 && vicino.first + D[n] < D[vicino.second]) {
+                D[vicino.second] = vicino.first + D[n];
+                distanze.push({D[vicino.second], vicino.second});
             } 
         }
     }

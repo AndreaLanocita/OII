@@ -1,0 +1,1 @@
+{"name":"Local: woodcarving2","url":"c:\\repos\\c++\\github\\OII\\woodcarving2.cpp","tests":[{"id":1729936637147,"input":"4 7\n4 3 2 1","output":"16"},{"id":1729936675086,"input":"2 10\n5 5","output":"10"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\repos\\c++\\github\\OII\\woodcarving2.cpp","group":"local","local":true}
